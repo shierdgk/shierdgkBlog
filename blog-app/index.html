@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>十二当归客 · 技术博客</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  /* ============ 主题变量 ============ */
+  :root {
+    --bg: #fafaff;
+    --card: #ffffff;
+    --ink: #1a1a2e;
+    --muted: #6b6b8a;
+    --hairline: rgba(235, 237, 245, 0.6);
+    --navbar-bg: rgba(255, 255, 255, 0.7);
+    --navbar-border: rgba(235, 237, 245, 0.3);
+    --navbar-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    --profile-grad: linear-gradient(180deg, #edf5ff 0%, #d9f0ff 100%);
+    --avatar-bg: #ffffff;
+    --profile-shadow: 0 8px 24px rgba(107, 138, 255, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04);
+    --avatar-shadow: 0 4px 12px rgba(107, 138, 255, 0.18);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.06);
+    --hero-shadow: 0 12px 32px rgba(107, 138, 255, 0.18);
+    --wave-opacity-1: 0.55;
+    --wave-opacity-2: 0.85;
+    --decor-pink: 0.5;
+    --decor-blue: 0.5;
+    --decor-yellow: 0.4;
+    --tag-react-bg: rgba(80, 70, 229, 0.1);
+    --tag-ts-bg: rgba(16, 185, 129, 0.1);
+    --tag-vue-bg: rgba(245, 158, 11, 0.12);
+    --tag-css-bg: rgba(255, 107, 157, 0.12);
+    --blue: #6b8aff;
+    --pink: #ff6b9d;
+    --yellow: #f59e0b;
+    --green: #10b981;
+    --purple: #5046e5;
+    --radius-card: 16px;
+    --radius-sm: 12px;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "PingFang SC",
+      "Microsoft YaHei", "Segoe UI", sans-serif;
+  }
+
+  /* ============ 夜间模式 ============ */
+  [data-theme="dark"] {
+    --bg: #14161b;
+    --card: #1c1f27;
+    --ink: #e9ebf2;
+    --muted: #98a0b4;
+    --hairline: rgba(255, 255, 255, 0.08);
+    --navbar-bg: rgba(22, 24, 30, 0.72);
+    --navbar-border: rgba(255, 255, 255, 0.06);
+    --navbar-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    --profile-grad: linear-gradient(180deg, #1b2436 0%, #16203a 100%);
+    --avatar-bg: #2a3550;
+    --profile-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.3);
+    --avatar-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+    --hero-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+    --wave-opacity-1: 0.5;
+    --wave-opacity-2: 1;
+    --decor-pink: 0.18;
+    --decor-blue: 0.2;
+    --decor-yellow: 0.14;
+    --tag-react-bg: rgba(140, 130, 255, 0.16);
+    --tag-ts-bg: rgba(16, 185, 129, 0.18);
+    --tag-vue-bg: rgba(245, 158, 11, 0.2);
+    --tag-css-bg: rgba(255, 107, 157, 0.18);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  html, body { margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+    transition: background-color 0.4s ease, color 0.4s ease;
+  }
+
+  /* ---------- 背景柔光装饰 ---------- */
+  .bg-decor { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+  .bg-decor span { transition: opacity 0.4s ease; }
+  .bg-decor .pink {
+    position: absolute; top: 110px; left: -100px;
+    width: 300px; height: 300px; border-radius: 50%;
+    background: #ffe0eb; filter: blur(80px); opacity: var(--decor-pink);
+  }
+  .bg-decor .blue {
+    position: absolute; top: -50px; right: -60px;
+    width: 450px; height: 450px; border-radius: 50%;
+    background: #e0e9ff; filter: blur(80px); opacity: var(--decor-blue);
+  }
+  .bg-decor .yellow {
+    position: absolute; bottom: 120px; right: 80px;
+    width: 350px; height: 350px; border-radius: 50%;
+    background: #fff7de; filter: blur(60px); opacity: var(--decor-yellow);
+  }
+
+  /* ---------- 悬浮导航栏 ---------- */
+  .navbar {
+    position: fixed; top: 0; left: 0; right: 0; height: 64px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--navbar-bg);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--navbar-border);
+    box-shadow: var(--navbar-shadow);
+    z-index: 100;
+    transition: background-color 0.4s ease, border-color 0.4s ease;
+  }
+  .nav-inner {
+    width: 100%; max-width: 1200px; height: 64px;
+    padding: 0 40px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-left { display: flex; align-items: center; gap: 10px; }
+  .logo-img { width: 36px; height: 36px; display: block; flex-shrink: 0; }
+  .logo-stack { display: flex; flex-direction: column; gap: -2px; line-height: 1.15; }
+  .logo-title { font-size: 16px; font-weight: 700; color: var(--ink); letter-spacing: 2px; transition: color 0.4s ease; }
+  .logo-sub { font-size: 12px; color: var(--muted); letter-spacing: 4px; transition: color 0.4s ease; }
+  .nav-links { display: flex; align-items: center; gap: 32px; }
+  .nav-links a {
+    font-size: 15px; font-weight: 500; color: var(--muted);
+    text-decoration: none; transition: color 0.2s ease;
+  }
+  .nav-links a:hover, .nav-links a.active { color: var(--ink); }
+  .nav-links a.active { font-weight: 600; }
+  .nav-right { display: flex; align-items: center; gap: 12px; }
+  .search-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--muted); cursor: pointer;
+  }
+
+  /* ---------- Hero 全宽海报 ---------- */
+  .hero {
+    position: relative;
+    width: 100%;
+    height: 380px;
+    margin-top: 0;
+    overflow: hidden;
+    background-image: url("assets/hero-coast.png");
+    background-size: cover;
+    background-position: center;
+    box-shadow: var(--hero-shadow);
+  }
+  .hero-scrim {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(180deg, rgba(20,22,30,0.30) 0%, rgba(20,22,30,0) 35%),
+      linear-gradient(0deg, rgba(20,22,30,0.55) 0%, rgba(20,22,30,0) 55%);
+  }
+  .hero-content {
+    position: absolute; left: 0; right: 0; top: 50%;
+    transform: translateY(-60%);
+    text-align: center; color: #fff; padding: 0 24px;
+    pointer-events: none;
+  }
+  .hero-kicker {
+    font-size: 13px; font-weight: 700; letter-spacing: 3px;
+    color: rgba(255,255,255,0.85); margin: 0 0 14px;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+  }
+  .hero-title {
+    font-size: 38px; font-weight: 700; line-height: 1.3; margin: 0;
+    text-shadow: 0 2px 16px rgba(0,0,0,0.45);
+  }
+
+  /* 向下箭头按钮 */
+  .hero-scroll {
+    position: absolute; left: 50%; bottom: 26px;
+    transform: translateX(-50%);
+    width: 48px; height: 48px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.22);
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.5);
+    color: #fff; text-decoration: none; z-index: 5;
+    animation: bounce 2s ease-in-out infinite;
+    transition: background 0.25s ease, transform 0.25s ease;
+  }
+  .hero-scroll:hover { background: rgba(255,255,255,0.38); transform: translateX(-50%) translateY(3px); }
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+  }
+
+  /* 波浪动画 */
+  .hero-waves { position: absolute; left: 0; right: 0; bottom: -1px; height: 96px; z-index: 3; pointer-events: none; }
+  .hero-waves svg { position: absolute; left: 0; bottom: 0; width: 200%; height: 100%; }
+  .wave-1 { fill: var(--bg); opacity: var(--wave-opacity-1); will-change: transform; animation: wave-move 16s linear infinite; }
+  .wave-2 { fill: var(--bg); opacity: var(--wave-opacity-2); will-change: transform; animation: wave-move 11s linear infinite reverse; }
+  @keyframes wave-move {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* ---------- 页面容器 ---------- */
+  .wrap { max-width: 1440px; margin: 0 auto; padding: 0 80px; }
+
+  /* ---------- 主体两栏布局 ---------- */
+  .layout {
+    display: flex; gap: 28px; align-items: flex-start;
+    margin-top: 48px; padding-bottom: 96px;
+  }
+  .sidebar { width: 340px; flex-shrink: 0; display: flex; flex-direction: column; gap: 24px; }
+  .articles { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 20px; scroll-margin-top: 88px; }
+
+  /* ---------- 卡片通用 ---------- */
+  .card {
+    background: var(--card); border-radius: var(--radius-card);
+    box-shadow: var(--shadow-sm), var(--shadow-md);
+    transition: background-color 0.4s ease, box-shadow 0.4s ease;
+  }
+
+  /* ---------- 个人信息卡 ---------- */
+  .profile {
+    padding: 32px; display: flex; flex-direction: column;
+    align-items: center; gap: 20px;
+    background-image: url("assets/profile-bg.png"), var(--profile-grad);
+    background-size: cover, cover;
+    background-position: center, center;
+    background-repeat: no-repeat, no-repeat;
+    background-color: var(--card);
+    box-shadow: var(--profile-shadow);
+    transition: background 0.4s ease, box-shadow 0.4s ease;
+  }
+  [data-theme="dark"] .profile {
+    background-image: linear-gradient(rgba(20, 22, 27, 0.72), rgba(20, 22, 27, 0.72)), url("assets/profile-bg.png");
+    background-size: cover, cover;
+    background-position: center, center;
+    background-color: var(--card);
+  }
+  .avatar {
+    width: 96px; height: 96px; border-radius: 50%;
+    background: url('assets/avatar.jpg') center/cover no-repeat;
+    border: 3px solid rgba(255, 255, 255, 0.8);
+    box-shadow: var(--avatar-shadow);
+    flex-shrink: 0;
+  }
+  .name { font-size: 26px; font-weight: 700; color: var(--ink); margin: 0; transition: color 0.4s ease; }
+  .stats { width: 100%; display: flex; justify-content: space-between; align-items: flex-start; }
+  .stat { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+  .stat-label { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); }
+  .stat-num { font-size: 22px; font-weight: 700; color: var(--ink); line-height: 1.1; transition: color 0.4s ease; }
+
+  /* ---------- 推荐位卡 ---------- */
+  .rec { padding: 20px; display: flex; flex-direction: column; gap: 16px; cursor: pointer; text-decoration: none; transition: background-color 0.4s ease, box-shadow 0.25s ease, transform 0.25s ease; }
+  .rec:hover { transform: translateY(-3px); }
+  .rec-header { display: flex; align-items: center; gap: 8px; }
+  .rec-title { font-size: 15px; font-weight: 600; color: var(--ink); transition: color 0.4s ease; }
+  .rec-banner {
+    position: relative;
+    width: 100%; height: 160px; border-radius: var(--radius-sm);
+    padding: 20px; display: flex; flex-direction: column; gap: 10px;
+    background-image: url("assets/rec-bg.png");
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+  }
+  /* 引导点击手势 */
+  .banner-hand {
+    position: absolute; right: 16px; bottom: 14px;
+    width: 46px; height: 46px; pointer-events: none; z-index: 2;
+  }
+  .banner-hand .hand {
+    width: 100%; height: 100%; display: block;
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.28));
+    transform-origin: 50% 85%;
+    animation: hand-tap 1.6s ease-in-out infinite;
+  }
+  .banner-hand .ring {
+    position: absolute; left: 50%; top: 58%;
+    width: 34px; height: 34px; margin: -17px 0 0 -17px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.9);
+    animation: tap-ring 1.6s ease-out infinite;
+  }
+  @keyframes hand-tap {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(7px) rotate(-5deg); }
+  }
+  @keyframes tap-ring {
+    0% { transform: scale(0.45); opacity: 0.85; }
+    70% { opacity: 0.2; }
+    100% { transform: scale(1.8); opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .banner-hand .hand, .banner-hand .ring { animation: none; }
+    .banner-hand .ring { opacity: 0; }
+  }
+  .banner-title { font-size: 18px; font-weight: 700; color: #fff; margin: 0; }
+  .banner-date { font-size: 11px; color: rgba(255, 255, 255, 0.7); margin: 0; }
+  .banner-cta {
+    align-self: flex-start; display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 14px; border-radius: 20px;
+    background: rgba(255, 255, 255, 0.25);
+    font-size: 13px; font-weight: 500; color: #fff; margin-top: auto;
+  }
+  .rec-more { display: flex; flex-direction: column; gap: 10px; padding-top: 8px; }
+  .rec-more-head { display: flex; align-items: center; gap: 6px; }
+  .rec-more-name { font-size: 14px; font-weight: 600; color: var(--ink); transition: color 0.4s ease; }
+  .badge-hot {
+    display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 10px;
+    background: rgba(245, 158, 11, 0.15); font-size: 10px; font-weight: 700; color: var(--yellow);
+  }
+  .rec-more-desc { font-size: 12px; color: var(--muted); line-height: 18px; margin: 0; transition: color 0.4s ease; }
+
+  /* ---------- 友情链接卡 ---------- */
+  .links { padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+  .links-title { font-size: 14px; font-weight: 600; color: var(--ink); margin: 0; transition: color 0.4s ease; }
+  .link-item {
+    display: flex; align-items: center; gap: 10px; padding: 8px 0;
+    font-size: 13px; color: var(--muted); transition: color 0.2s ease;
+  }
+  .link-item svg { flex-shrink: 0; }
+  a.link-item { text-decoration: none; }
+  a.link-item:hover { color: var(--pink, #ff6b9d); }
+
+  /* ---------- 文章区 ---------- */
+  .articles-header { display: flex; align-items: baseline; justify-content: space-between; }
+  .articles-title { font-size: 22px; font-weight: 700; color: var(--ink); margin: 0; transition: color 0.4s ease; }
+  .articles-count { font-size: 13px; color: var(--muted); transition: color 0.4s ease; }
+  .article-card {
+    display: flex; gap: 20px; padding: 20px; align-items: stretch;
+    cursor: pointer; text-decoration: none; color: inherit;
+    transition: transform .25s ease, box-shadow .25s ease, background .4s ease;
+  }
+  .article-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+  .thumb { width: 200px; height: 140px; flex-shrink: 0; border-radius: 10px; }
+  .thumb-1 { background: linear-gradient(135deg, #6b8aff, #8cc7ff); }
+  .thumb-2 { background: linear-gradient(135deg, #6be3a1, #8cedc7); }
+  .thumb-3 { background: linear-gradient(135deg, #ffbd8a, #ffd9ad); }
+  .thumb-4 { background: linear-gradient(135deg, #ff6b9e, #ffa6bf); }
+  .article-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+  .article-title { font-size: 17px; font-weight: 600; color: var(--ink); line-height: 26px; margin: 0; transition: color 0.4s ease; }
+  .article-meta { display: flex; align-items: center; gap: 12px; }
+  .article-date { font-size: 12px; color: var(--muted); transition: color 0.4s ease; }
+  .tag { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 500; }
+  .tag-react { background: var(--tag-react-bg); color: var(--purple); }
+  .tag-ts { background: var(--tag-ts-bg); color: var(--green); }
+  .tag-vue { background: var(--tag-vue-bg); color: var(--yellow); }
+  .tag-css { background: var(--tag-css-bg); color: var(--pink); }
+  .article-excerpt { font-size: 13px; color: var(--muted); line-height: 20px; margin: 0; transition: color 0.4s ease; }
+
+  /* ---------- 分页 ---------- */
+  .pager {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    margin-top: 28px; flex-wrap: wrap;
+  }
+  .pg {
+    min-width: 38px; height: 38px; padding: 0 12px;
+    border-radius: 10px; border: 1px solid var(--hairline);
+    background: var(--card); color: var(--muted);
+    font-size: 14px; cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: color .2s ease, border-color .2s ease, background .2s ease, opacity .2s ease;
+  }
+  .pg:hover:not(:disabled) { color: var(--ink); border-color: var(--blue); }
+  .pg-active {
+    background: linear-gradient(135deg, #ff6b9d, #6b8aff);
+    color: #fff; border-color: transparent; font-weight: 600;
+  }
+  .pg:disabled { opacity: .4; cursor: not-allowed; }
+
+  /* ---------- 日夜切换按钮 ---------- */
+  .theme-toggle {
+    position: fixed; right: 28px; bottom: 28px; z-index: 200;
+    width: 52px; height: 52px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--card); color: var(--ink);
+    border: 1px solid var(--hairline);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    cursor: pointer;
+    transition: background-color 0.4s ease, color 0.4s ease, transform 0.2s ease, box-shadow 0.4s ease;
+  }
+  .theme-toggle:hover { transform: translateY(-2px) rotate(15deg); box-shadow: 0 10px 28px rgba(0,0,0,0.22); }
+  .theme-toggle .icon-moon { display: block; }
+  .theme-toggle .icon-sun { display: none; }
+  [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+  [data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+
+  /* ---------- 回到顶部火箭 ---------- */
+  .back-to-top {
+    position: fixed; right: 28px;
+    bottom: 88px; z-index: 98;
+    width: 44px; height: 44px; border-radius: 50%; border: none;
+    background: var(--card); color: var(--pink);
+    box-shadow: var(--shadow-md);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    opacity: 0; transform: translateY(16px) scale(.85);
+    transition: opacity .35s ease, transform .35s ease, box-shadow .25s ease, background .4s ease;
+    pointer-events: none;
+  }
+  .back-to-top.visible {
+    opacity: 1; transform: translateY(0) scale(1); pointer-events: auto;
+  }
+  .back-to-top:hover {
+    transform: translateY(-4px) scale(1.1);
+    box-shadow: 0 10px 28px rgba(255,107,157,.22);
+  }
+  .back-to-top svg { width: 20px; height: 20px; }
+  .back-to-top:hover .rocket-flame {
+    animation: flame-flicker .3s infinite alternate;
+  }
+  @keyframes flame-flicker {
+    from { transform: scaleY(1); opacity: 1; }
+    to   { transform: scaleY(.65); opacity: .55; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .back-to-top { transition: none; }
+    .back-to-top:hover .rocket-flame { animation: none; }
+  }
+
+  /* ---------- 响应式 ---------- */
+  @media (max-width: 1080px) {
+    .layout { flex-direction: column; }
+    .sidebar { width: 100%; flex-direction: row; flex-wrap: wrap; }
+    .sidebar .profile, .sidebar .rec, .sidebar .links { flex: 1; min-width: 280px; }
+  }
+  @media (max-width: 720px) {
+    .wrap { padding: 0 20px; }
+    .nav-links { gap: 18px; }
+    .nav-links a:nth-child(n + 4) { display: none; }
+    .hero { height: 300px; }
+    .hero-title { font-size: 26px; }
+    .sidebar { flex-direction: column; }
+    .article-card { flex-direction: column; }
+    .thumb { width: 100%; height: 160px; }
+  }
+</style>
+</head>
+<body>
+  <div class="bg-decor" aria-hidden="true">
+    <span class="pink"></span>
+    <span class="blue"></span>
+    <span class="yellow"></span>
+  </div>
+
+  <!-- 悬浮导航栏 -->
+  <header class="navbar">
+    <div class="nav-inner">
+      <div class="nav-left">
+        <img class="logo-img" src="assets/logo.png" alt="logo" />
+        <div class="logo-stack">
+          <span class="logo-title">十二当归客</span>
+          <span class="logo-sub">个人博客</span>
+        </div>
+      </div>
+      <nav class="nav-links">
+        <a href="index.html" class="active">首页</a>
+        <a href="articles.html">文章</a>
+        <a href="archive.html">归档</a>
+        <a href="about.html">关于</a>
+      </nav>
+      <div class="nav-right">
+        <span class="search-icon" title="搜索">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" />
+            <path d="M16 16L20 20" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero 全宽海报 -->
+  <section class="hero">
+    <div class="hero-scrim"></div>
+    <div class="hero-content">
+      <p class="hero-kicker">TECH · LIFE · POETRY</p>
+      <h1 class="hero-title">记录技术，也记录生活里的诗</h1>
+    </div>
+    <a href="#articles" class="hero-scroll" aria-label="下滑到最新文章">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </a>
+    <!-- 双层波浪动画 -->
+    <div class="hero-waves" aria-hidden="true">
+      <svg class="wave-1" viewBox="0 0 2880 96" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,48 Q360,90 720,48 T1440,48 L1440,96 L0,96 Z M1440,48 Q1800,90 2160,48 T2880,48 L2880,96 L1440,96 Z" />
+      </svg>
+      <svg class="wave-2" viewBox="0 0 2880 96" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,56 Q360,24 720,56 T1440,56 L1440,96 L0,96 Z M1440,56 Q1800,24 2160,56 T2880,56 L2880,96 L1440,96 Z" />
+      </svg>
+    </div>
+  </section>
+
+  <main class="wrap">
+    <!-- 两栏布局 -->
+    <div class="layout">
+      <!-- 左侧边栏 -->
+      <aside class="sidebar">
+        <!-- 个人信息卡 -->
+        <section class="card profile">
+          <div class="avatar"></div>
+          <h2 class="name">十二当归客</h2>
+          <div class="stats">
+            <div class="stat">
+              <span class="stat-label">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.2" stroke="#6b8aff" stroke-width="1.5"/><path d="M3.5 19c0-3.3 2.5-5.5 5.5-5.5s5.5 2.2 5.5 5.5" stroke="#6b8aff" stroke-width="1.5" fill="none"/><path d="M16 6.2a3 3 0 0 1 0 5.6M16.5 19c0-2.6 1.6-4.4 3.5-5" stroke="#6b8aff" stroke-width="1.5" fill="none"/></svg>
+                粉丝
+              </span>
+              <span class="stat-num">625</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 20.5l-1.4-1.3C6 15.1 3 12.3 3 9.1 3 6.5 5 4.6 7.4 4.6c1.5 0 2.9.7 3.6 1.9.7-1.2 2.1-1.9 3.6-1.9C20 4.6 22 6.5 22 9.1c0 3.2-3 6-7.6 10.1L12 20.5z" stroke="#f59e0b" stroke-width="1.5" fill="none"/></svg>
+                获赞
+              </span>
+              <span class="stat-num">8452</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 4c-4.4 0-8 3.6-8 8 0 2 .8 3.9 2 5.4L12 22l6-4.6c1.2-1.5 2-3.4 2-5.4 0-4.4-3.6-8-8-8z" stroke="#ff6b9d" stroke-width="1.5" fill="none"/><circle cx="12" cy="12" r="2.5" fill="#ff6b9d"/></svg>
+                访问量
+              </span>
+              <span class="stat-num">28916</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- 推荐位卡 -->
+        <section class="card rec">
+          <div class="rec-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69l-3.61.81.34 3.68L1 12l2.44 2.79-.34 3.69 3.61.82L8.6 22.5 12 21.04l3.4 1.46 1.89-3.19 3.61-.82-.34-3.68L23 12z" stroke="#ff6b9d" stroke-width="1.5" fill="none"/></svg>
+            <span class="rec-title">查看我的经历</span>
+          </div>
+          <div class="rec-banner">
+            <p class="banner-title">他的最美瞬间</p>
+            <p class="banner-date">2026年7月18日 18:51</p>
+            <span class="banner-cta">了解更多</span>
+            <div class="banner-hand" aria-hidden="true">
+              <span class="ring"></span>
+              <svg class="hand" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="#fff" d="M9 11.24V7.5C9 6.12 10.12 5 11.5 5S14 6.12 14 7.5v3.74c1.21-.81 2-2.18 2-3.74C16 5.01 13.99 3 11.5 3S7 5.01 7 7.5c0 1.56.79 2.93 2 3.74zm9.84 4.63l-4.54-2.26c-.17-.07-.35-.11-.54-.11H13v-6c0-.83-.67-1.5-1.5-1.5S10 6.67 10 7.5v10.74l-3.43-.72c-.08-.01-.15-.03-.24-.03-.31 0-.59.13-.79.33l-.79.8 4.94 4.94c.27.27.65.44 1.06.44h6.79c.75 0 1.33-.55 1.44-1.28l.75-5.27c.01-.07.02-.14.02-.2 0-.62-.38-1.16-.91-1.38z"/></svg>
+            </div>
+          </div>
+          <div class="rec-more">
+            <div class="rec-more-head">
+              <span class="rec-more-name">十二当归客 - 了解更多</span>
+              <span class="badge-hot">HOT</span>
+            </div>
+            <p class="rec-more-desc">探索更多精彩内容，发现技术世界的无限可能...</p>
+          </div>
+        </section>
+
+        <!-- 友情链接卡 -->
+        <section class="card links">
+          <h2 class="links-title">友情链接</h2>
+          <a class="link-item" href="https://github.com/shierdgk" target="_blank" rel="noopener noreferrer">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.71c-2.78.6-3.37-1.34-3.37-1.34-.45-1.15-1.11-1.46-1.11-1.46-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.56 9.56 0 015 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z" fill="currentColor"/></svg>
+            <span>GitHub</span>
+          </a>
+          <a class="link-item" href="index.html">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 4h16v12H4V4z" stroke="#6b8aff" stroke-width="1.5" fill="none"/><path d="M8 8h8M8 11h5M8 14h3" stroke="#6b8aff" stroke-width="1.5"/></svg>
+            <span>技术博客</span>
+          </a>
+          <div class="link-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 11a9 9 0 019-9" stroke="#ff6b9d" stroke-width="2" stroke-linecap="round"/><path d="M4 16a4 4 0 014-4" stroke="#ff6b9d" stroke-width="2" stroke-linecap="round"/><circle cx="4.5" cy="19.5" r="1.5" fill="#ff6b9d"/></svg>
+            <span>RSS 订阅</span>
+          </div>
+        </section>
+      </aside>
+
+      <!-- 右侧文章区 -->
+      <section class="articles" id="articles">
+        <div class="articles-header">
+          <h2 class="articles-title">最新文章</h2>
+          <span class="articles-count" id="articlesCount">共 0 篇</span>
+        </div>
+
+        <div id="homeFeed"></div>
+        <nav class="pager" id="homePager" aria-label="文章分页"></nav>
+      </section>
+    </div>
+  </main>
+
+  <!-- 日夜模式切换按钮 -->
+  <button class="theme-toggle" id="themeToggle" aria-label="切换日夜模式" title="切换日夜模式">
+    <svg class="icon-moon" width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z" fill="currentColor"/>
+    </svg>
+    <svg class="icon-sun" width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="4.2" fill="currentColor"/>
+      <g stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M19.4 4.6l-1.8 1.8M6.4 17.6l-1.8 1.8"/>
+      </g>
+    </svg>
+  </button>
+
+  <!-- 回到顶部火箭 -->
+  <button class="back-to-top" id="backToTop" aria-label="回到顶部" title="回到顶部">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M12 2.5L9.5 8.5h5L12 2.5z" fill="currentColor"/><path d="M12 8.5L8 18h8l-4-9.5z" fill="currentColor" opacity=".75"/><path class="rocket-flame" d="M11 19h2c0 1-.5 2-1 2s-1-1-1-2z" fill="#ff6b9d"/></svg>
+  </button>
+
+  <script src="articles-data.js"></script>
+  <script src="md.js"></script>
+  <script>
+    /* ===== 首页文章列表（数据驱动 + 分页，每页 5 条）===== */
+    (function () {
+      var PAGE_SIZE = 5;
+      var feed = document.getElementById('homeFeed');
+      var pager = document.getElementById('homePager');
+      var countEl = document.getElementById('articlesCount');
+      var data = window.BLOG_ARTICLES || [];
+      if (countEl) countEl.textContent = '共 ' + data.length + ' 篇';
+      var totalPages = Math.max(1, Math.ceil(data.length / PAGE_SIZE));
+
+      function coverStyle(cover) {
+        return window.isGradient(cover)
+          ? 'background:' + cover
+          : 'background:linear-gradient(180deg, rgba(10,12,20,0) 48%, rgba(10,12,20,.5) 100%), radial-gradient(130% 90% at 100% 100%, rgba(10,12,20,.8), rgba(10,12,20,0) 50%), url(\'' + cover + '\') center/cover no-repeat';
+      }
+
+      function renderPage(page) {
+        page = Math.min(Math.max(1, page), totalPages);
+        var start = (page - 1) * PAGE_SIZE;
+        var slice = data.slice(start, start + PAGE_SIZE);
+        feed.innerHTML = slice.map(function (a) {
+          return '<a class="card article-card" href="post.html?id=' + a.id + '">' +
+            '<div class="thumb" style="' + coverStyle(a.cover) + '"></div>' +
+            '<div class="article-body">' +
+              '<h3 class="article-title">' + a.title + '</h3>' +
+              '<div class="article-meta">' +
+                '<span class="article-date">' + a.date + '</span>' +
+                '<span class="tag ' + (a.tagClass || 'tag-react') + '">' + (a.tag || '') + '</span>' +
+              '</div>' +
+              '<p class="article-excerpt">' + a.excerpt + '</p>' +
+            '</div>' +
+          '</a>';
+        }).join('');
+
+        // 分页条
+        if (totalPages <= 1) { pager.innerHTML = ''; return; }
+        var html = '<button class="pg pg-prev" ' + (page === 1 ? 'disabled' : '') + '>上一页</button>';
+        for (var p = 1; p <= totalPages; p++) {
+          html += '<button class="pg ' + (p === page ? 'pg-active' : '') + '" data-page="' + p + '">' + p + '</button>';
+        }
+        html += '<button class="pg pg-next" ' + (page === totalPages ? 'disabled' : '') + '>下一页</button>';
+        pager.innerHTML = html;
+
+        pager.querySelectorAll('.pg[data-page]').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            renderPage(+btn.dataset.page);
+            var top = document.getElementById('articles').offsetTop - 88;
+            window.scrollTo({ top: top, behavior: 'smooth' });
+          });
+        });
+        var prev = pager.querySelector('.pg-prev');
+        var next = pager.querySelector('.pg-next');
+        if (prev) prev.addEventListener('click', function () { renderPage(page - 1); });
+        if (next) next.addEventListener('click', function () { renderPage(page + 1); });
+      }
+
+      renderPage(1);
+    })();
+  </script>
+
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var btn = document.getElementById('themeToggle');
+      try {
+        var saved = localStorage.getItem('theme');
+        if (saved === 'dark' || saved === 'light') root.dataset.theme = saved;
+      } catch (e) {}
+      btn.addEventListener('click', function () {
+        var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+        root.dataset.theme = next;
+        try { localStorage.setItem('theme', next); } catch (e) {}
+      });
+      var rec = document.querySelector('.rec');
+      if (rec) rec.addEventListener('click', function () { location.href = 'about.html'; });
+    })();
+
+    /* ===== 回到顶部火箭 ===== */
+    (function () {
+      var btn = document.getElementById('backToTop');
+      if (!btn) return;
+      function onScroll() {
+        btn.classList.toggle('visible', window.scrollY > 360);
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+      btn.addEventListener('click', function () {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    })();
+  </script>
+</body>
+</html>

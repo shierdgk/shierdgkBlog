@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>全部文章 · 十二当归客</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  /* ============ 主题变量 ============ */
+  :root {
+    --bg: #fafaff;
+    --card: #ffffff;
+    --ink: #1a1a2e;
+    --muted: #6b6b8a;
+    --hairline: rgba(235, 237, 245, 0.6);
+    --navbar-bg: rgba(255, 255, 255, 0.7);
+    --navbar-border: rgba(235, 237, 245, 0.3);
+    --navbar-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.06);
+    --tag-react-bg: rgba(80, 70, 229, 0.1);
+    --tag-ts-bg: rgba(16, 185, 129, 0.1);
+    --tag-vue-bg: rgba(245, 158, 11, 0.12);
+    --tag-css-bg: rgba(255, 107, 157, 0.12);
+    --blue: #6b8aff;
+    --pink: #ff6b9d;
+    --yellow: #f59e0b;
+    --green: #10b981;
+    --purple: #5046e5;
+    --radius-card: 16px;
+    --radius-sm: 12px;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "PingFang SC",
+      "Microsoft YaHei", "Segoe UI", sans-serif;
+  }
+  [data-theme="dark"] {
+    --bg: #14161b;
+    --card: #1c1f27;
+    --ink: #e9ebf2;
+    --muted: #98a0b4;
+    --hairline: rgba(255, 255, 255, 0.08);
+    --navbar-bg: rgba(22, 24, 30, 0.72);
+    --navbar-border: rgba(255, 255, 255, 0.06);
+    --navbar-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+    --tag-react-bg: rgba(140, 130, 255, 0.16);
+    --tag-ts-bg: rgba(16, 185, 129, 0.18);
+    --tag-vue-bg: rgba(245, 158, 11, 0.2);
+    --tag-css-bg: rgba(255, 107, 157, 0.18);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  html, body { margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg); color: var(--ink);
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+    min-height: 100vh; position: relative; overflow-x: hidden;
+    transition: background-color .4s ease, color .4s ease;
+  }
+
+  /* ---------- 背景柔光 ---------- */
+  .bg-decor { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+  .bg-decor span { transition: opacity .4s ease; }
+  .bg-decor .pink { position: absolute; top: 110px; left: -100px; width: 300px; height: 300px; border-radius: 50%; background: #ffe0eb; filter: blur(80px); opacity: .5; }
+  .bg-decor .blue { position: absolute; top: -50px; right: -60px; width: 450px; height: 450px; border-radius: 50%; background: #e0e9ff; filter: blur(80px); opacity: .5; }
+  [data-theme="dark"] .bg-decor .pink { opacity: .15; }
+  [data-theme="dark"] .bg-decor .blue { opacity: .12; }
+
+  /* ---------- 导航栏 ---------- */
+  .navbar {
+    position: fixed; top: 0; left: 0; right: 0; height: 64px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--navbar-bg);
+    -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--navbar-border);
+    box-shadow: var(--navbar-shadow); z-index: 100;
+    transition: background-color .4s ease, border-color .4s ease;
+  }
+  .nav-inner {
+    width: 100%; max-width: 1200px; height: 64px;
+    padding: 0 40px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-left { display: flex; align-items: center; gap: 10px; }
+  .logo-img { width: 36px; height: 36px; display: block; flex-shrink: 0; }
+  .logo-stack { display: flex; flex-direction: column; gap: -2px; line-height: 1.15; }
+  .logo-title { font-size: 16px; font-weight: 700; color: var(--ink); letter-spacing: 2px; transition: color .4s ease; }
+  .logo-sub { font-size: 12px; color: var(--muted); letter-spacing: 4px; transition: color .4s ease; }
+  .nav-links { display: flex; align-items: center; gap: 32px; }
+  .nav-links a { font-size: 15px; font-weight: 500; color: var(--muted); text-decoration: none; transition: color .2s ease; }
+  .nav-links a:hover, .nav-links a.active { color: var(--ink); }
+  .nav-links a.active { font-weight: 600; }
+  .search-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--muted); cursor: pointer; transition: color .2s ease; }
+  .search-icon:hover { color: var(--ink); }
+
+  /* ---------- 页面头部 ---------- */
+  .page-header {
+    margin-top: 88px; padding: 48px 40px 24px;
+    text-align: center;
+  }
+  .page-kicker { font-size: 13px; font-weight: 600; letter-spacing: 3px; color: var(--pink); text-transform: uppercase; margin: 0 0 8px; }
+  .page-title { font-size: 34px; font-weight: 800; margin: 0 0 8px; line-height: 1.2; }
+  .page-desc { font-size: 15px; color: var(--muted); margin: 0; max-width: 480px; margin-inline: auto; }
+
+  /* ---------- 文章网格 ---------- */
+  .articles-wrap {
+    max-width: 1080px; margin: 0 auto; padding: 20px 40px 80px;
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px;
+  }
+
+  /* ---------- 纵向文章卡片 ---------- */
+  .art-card {
+    background: var(--card); border-radius: var(--radius-card);
+    box-shadow: var(--shadow-sm); overflow: hidden;
+    cursor: pointer; text-decoration: none; color: inherit;
+    transition: transform .25s ease, box-shadow .25s ease, background .4s ease;
+    display: flex; flex-direction: column;
+  }
+  .art-card:hover {
+    transform: translateY(-5px); box-shadow: var(--shadow-md);
+  }
+  .art-thumb {
+    width: 100%; height: 200px;
+    background-size: cover; background-position: center;
+    flex-shrink: 0;
+  }
+  .art-body { padding: 22px 24px 26px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .art-meta { display: flex; align-items: center; justify-content: space-between; }
+  .art-date { font-size: 13px; color: var(--muted); }
+  .art-tag {
+    font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 600;
+  }
+  .tag-react  { background: var(--tag-react-bg);  color: #5046e5; }
+  .tag-ts     { background: var(--tag-ts-bg);     color: #059669; }
+  .tag-vue    { background: var(--tag-vue-bg);    color: #d97706; }
+  .tag-css    { background: var(--tag-css-bg);    color: #db2777; }
+  .tag-python { background: rgba(107,138,255,.12); color: #2563eb; }
+  .tag-docker { background: rgba(16,185,129,.12);   color: #0891b2; }
+  .tag-test   { background: rgba(255,107,157,.12);  color: #be185d; }
+  .tag-devops { background: rgba(139,92,246,.14);   color: #7c3aed; }
+  .art-title {
+    font-size: 17px; font-weight: 700; line-height: 1.45;
+    margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .art-excerpt {
+    font-size: 14px; color: var(--muted); line-height: 1.65;
+    margin: 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+    flex: 1;
+  }
+
+  /* ---------- 日夜切换 ---------- */
+  .theme-toggle {
+    position: fixed; bottom: 28px; right: 28px; z-index: 99;
+    width: 46px; height: 46px; border-radius: 50%; border: none;
+    background: var(--card); box-shadow: var(--shadow-md);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--ink); transition: all .3s ease;
+  }
+  .theme-toggle:hover { transform: scale(1.08); }
+  .icon-sun { display: none; }
+  [data-theme="dark"] .icon-moon { display: none; }
+  [data-theme="dark"] .icon-sun { display: block; }
+
+  /* ---------- 分页 ---------- */
+  .art-pager {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    margin: 36px auto 60px; max-width: 600px; flex-wrap: wrap;
+  }
+  .apg {
+    min-width: 38px; height: 38px; padding: 0 12px;
+    border-radius: 10px; border: 1px solid var(--hairline);
+    background: var(--card); color: var(--muted);
+    font-size: 14px; cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: color .2s ease, border-color .2s ease,
+                background .2s ease, opacity .2s ease;
+  }
+  .apg:hover:not(:disabled) { color: var(--ink); border-color: var(--blue); }
+  .apg-active {
+    background: linear-gradient(135deg, #ff6b9d, #6b8aff);
+    color: #fff; border-color: transparent; font-weight: 600;
+  }
+  .apg:disabled { opacity: .4; cursor: not-allowed; }
+  .page-info {
+    text-align: center; font-size: 13px; color: var(--muted);
+    margin-bottom: 24px;
+  }
+
+  /* ---------- 响应式 ---------- */
+  @media (max-width: 768px) {
+    .articles-wrap { grid-template-columns: 1fr; padding: 20px 20px 60px; }
+    .page-header { padding: 40px 20px 20px; }
+    .nav-inner { padding: 0 20px; }
+    .nav-links { gap: 18px; }
+    .nav-links a:nth-child(n+4) { display: none; }
+  }
+</style>
+</head>
+
+<body>
+  <!-- 背景装饰 -->
+  <div class="bg-decor">
+    <span class="pink"></span><span class="blue"></span>
+  </div>
+
+  <!-- 悬浮导航栏 -->
+  <header class="navbar">
+    <div class="nav-inner">
+      <div class="nav-left">
+        <img class="logo-img" src="assets/logo.png" alt="logo" />
+        <div class="logo-stack">
+          <span class="logo-title">十二当归客</span>
+          <span class="logo-sub">个人博客</span>
+        </div>
+      </div>
+      <nav class="nav-links">
+        <a href="index.html">首页</a>
+        <a href="articles.html" class="active">文章</a>
+        <a href="archive.html">归档</a>
+        <a href="about.html">关于</a>
+      </nav>
+      <div class="nav-right">
+        <span class="search-icon" title="搜索">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M16 16L20 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- 页面头部 -->
+  <section class="page-header">
+    <p class="page-kicker">All Articles</p>
+    <h1 class="page-title">全部文章</h1>
+    <p class="page-desc">记录技术成长路上的每一个脚印，分享学习心得与实践经验。</p>
+  </section>
+
+  <!-- 文章网格（JS 渲染） -->
+  <main class="articles-wrap" id="articleGrid"></main>
+
+  <!-- 分页 -->
+  <nav class="art-pager" id="artPager" aria-label="文章分页"></nav>
+  <p class="page-info" id="pageInfo"></p>
+
+  <!-- 日夜模式切换按钮 -->
+  <button class="theme-toggle" id="themeToggle" aria-label="切换日夜模式" title="切换日夜模式">
+    <svg class="icon-moon" width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z" fill="currentColor"/></svg>
+    <svg class="icon-sun" width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M19.4 4.6l-1.8 1.8M6.4 17.6l-1.8 1.8"/></g></svg>
+  </button>
+
+  <script src="articles-data.js"></script>
+  <script src="md.js"></script>
+  <script>
+    /* ===== 文章网格（数据驱动，每页 8 条分页）===== */
+    (function () {
+      var PAGE_SIZE = 8;
+      var grid = document.getElementById('articleGrid');
+      var pager = document.getElementById('artPager');
+      var info = document.getElementById('pageInfo');
+      var data = window.BLOG_ARTICLES || [];
+
+      function coverStyle(cover) {
+        return window.isGradient(cover)
+          ? 'background:' + cover
+          : 'background:linear-gradient(180deg, rgba(10,12,20,0) 48%, rgba(10,12,20,.5) 100%), radial-gradient(130% 90% at 100% 100%, rgba(10,12,20,.8), rgba(10,12,20,0) 50%), url(\'' + cover + '\') center/cover no-repeat';
+      }
+
+      function renderPage(page) {
+        page = Math.min(Math.max(1, page), totalPages);
+        var start = (page - 1) * PAGE_SIZE;
+        var slice = data.slice(start, start + PAGE_SIZE);
+        grid.innerHTML = slice.map(function (a) {
+          return '<a class="art-card" href="post.html?id=' + a.id + '">' +
+            '<div class="art-thumb" style="' + coverStyle(a.cover) + '"></div>' +
+            '<div class="art-body">' +
+              '<div class="art-meta">' +
+                '<span class="art-date">' + a.date + '</span>' +
+                '<span class="art-tag ' + (a.tagClass || 'tag-react') + '">' + (a.tag || '') + '</span>' +
+              '</div>' +
+              '<h3 class="art-title">' + a.title + '</h3>' +
+              '<p class="art-excerpt">' + a.excerpt + '</p>' +
+            '</div>' +
+          '</a>';
+        }).join('');
+
+        // 分页条
+        if (totalPages <= 1) {
+          pager.innerHTML = '';
+          if (info) info.textContent = '共 ' + data.length + ' 篇文章';
+          return;
+        }
+        if (info) info.textContent = '第 ' + page + ' / ' + totalPages + ' 页 · 共 ' + data.length + ' 篇';
+
+        var html = '<button class="apg apg-prev" ' + (page === 1 ? 'disabled' : '') + '>上一页</button>';
+        for (var p = 1; p <= totalPages; p++) {
+          html += '<button class="apg ' + (p === page ? 'apg-active' : '') + '" data-page="' + p + '">' + p + '</button>';
+        }
+        html += '<button class="apg apg-next" ' + (page === totalPages ? 'disabled' : '') + '>下一页</button>';
+        pager.innerHTML = html;
+
+        pager.querySelectorAll('.apg[data-page]').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            renderPage(+btn.dataset.page);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+        });
+        var prev = pager.querySelector('.apg-prev');
+        var next = pager.querySelector('.apg-next');
+        if (prev) prev.addEventListener('click', function () { renderPage(page - 1); });
+        if (next) next.addEventListener('click', function () { renderPage(page + 1); });
+      }
+
+      var totalPages = Math.max(1, Math.ceil(data.length / PAGE_SIZE));
+      renderPage(1);
+    })();
+
+    /* ===== 日夜切换 ===== */
+    (function() {
+      var root = document.documentElement;
+      var btn = document.getElementById('themeToggle');
+      try { var saved = localStorage.getItem('theme'); if(saved === 'dark' || saved === 'light') root.dataset.theme = saved; } catch(e){}
+      btn.addEventListener('click', function() {
+        var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+        root.dataset.theme = next;
+        try{ localStorage.setItem('theme', next); } catch(e){}
+      });
+    })();
+  </script>
+</body>
+</html>
