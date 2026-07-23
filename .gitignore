@@ -1,0 +1,13 @@
+# WorkBuddy tool metadata (contains local memory/notes — not for the repo)
+.workbuddy/
+
+# Dependencies
+node_modules/
+
+# Local backup of removed old articles (not part of the live site)
+articles-data.archive.js
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+*.swp

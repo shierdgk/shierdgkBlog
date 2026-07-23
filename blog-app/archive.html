@@ -229,6 +229,15 @@
       });
       var years = Object.keys(groups).sort(function (x, y) { return x < y ? 1 : -1; });
 
+      if (!years.length) {
+        list.innerHTML = '<div class="feed-empty" role="status" style="text-align:center;padding:72px 20px;color:var(--muted);">' +
+          '<svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" style="opacity:.5;margin-bottom:14px;"><path d="M6 3h9l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" stroke-linejoin="round"/><path d="M14 3v6h6" stroke-linejoin="round"/><path d="M9 13h6M9 17h4" stroke-linecap="round"/></svg>' +
+          '<p style="font-size:17px;font-weight:600;color:var(--text);margin:0 0 6px;">暂无归档文章</p>' +
+          '<p style="font-size:14px;margin:0;opacity:.85;">文章发布后会按年份自动归档在这里。</p>' +
+          '</div>';
+        return;
+      }
+
       list.innerHTML = years.map(function (y) {
         var items = groups[y].map(function (a) {
           var parts = (a.date || '').split('-');

@@ -262,6 +262,22 @@
       var info = document.getElementById('pageInfo');
       var data = window.BLOG_ARTICLES || [];
 
+      function emptyStateHtml() {
+        return '<div class="feed-empty" role="status" style="text-align:center;padding:72px 20px;color:var(--muted);">' +
+          '<svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" style="opacity:.5;margin-bottom:14px;"><path d="M6 3h9l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" stroke-linejoin="round"/><path d="M14 3v6h6" stroke-linejoin="round"/><path d="M9 13h6M9 17h4" stroke-linecap="round"/></svg>' +
+          '<p style="font-size:17px;font-weight:600;color:var(--text);margin:0 0 6px;">还没有发布文章</p>' +
+          '<p style="font-size:14px;margin:0;opacity:.85;">新的内容正在筹备中，敬请期待。</p>' +
+          '</div>';
+      }
+
+      if (data.length === 0) {
+        if (info) info.textContent = '共 0 篇文章';
+        if (pager) pager.innerHTML = '';
+        grid.innerHTML = emptyStateHtml();
+        return;
+      }
+
+
       function coverStyle(cover) {
         return window.isGradient(cover)
           ? 'background:' + cover
