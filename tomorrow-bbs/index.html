@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="assets/icon/iconfont.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TomorrowBBS · 静态体验版</title>
+  <link rel="stylesheet" href="assets/icon/iconfont.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- 固定头部（结构对齐原 index.vue） -->
+  <header class="header">
+    <div class="header-content">
+      <div class="logo" id="logo">Tomorrow</div>
+      <nav class="menu" id="menu"><!-- 由 JS 渲染板块菜单 --></nav>
+      <div class="auth-buttons">
+        <div class="search-container">
+          <div class="ep-input" id="searchInput" style="max-width:200px;">
+            <input type="text" id="searchText" placeholder="Search..." />
+            <span class="suffix" id="searchBtn"><span class="iconfont icon-search"></span></span>
+          </div>
+          <button class="standalone-button" id="postBtn"><span class="iconfont icon-post" style="margin-right:4px;"></span>发帖</button>
+        </div>
+        <div id="authArea"><!-- 登录/注册 或 用户信息，由 JS 渲染 --></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="body-content">
+    <div id="app-main"><!-- 路由视图，由 JS 渲染 --></div>
+  </main>
+
+  <!-- 登录/注册弹窗挂载点 -->
+  <div id="loginDialogMount"></div>
+
+  <!-- 图片预览灯箱 -->
+  <div class="lightbox" id="lightbox">
+    <span class="lb-close iconfont icon-close" id="lbClose"></span>
+    <img id="lbImg" src="" alt="" />
+    <div class="lb-count" id="lbCount"></div>
+  </div>
+
+  <!-- 全局提示 -->
+  <div class="tb-toast" id="toast"></div>
+
+  <!-- 返回博客 -->
+  <a class="back-blog" href="../blog-app/index.html">&larr; 返回我的博客</a>
+
+  <script src="data/store.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
