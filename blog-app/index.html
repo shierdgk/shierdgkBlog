@@ -83,6 +83,7 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     min-height: 100vh;
+    min-height: 100dvh;
     position: relative;
     overflow-x: hidden;
     transition: background-color 0.4s ease, color 0.4s ease;
@@ -142,6 +143,15 @@
     display: flex; align-items: center; justify-content: center;
     color: var(--muted); cursor: pointer;
   }
+  /* 汉堡按钮：桌面端隐藏，仅在窄屏（≤720px）出现，不影响 PC 布局 */
+  .nav-toggle {
+    display: none;
+    width: 38px; height: 38px; border: none; background: transparent;
+    color: var(--ink); cursor: pointer; border-radius: 8px;
+    align-items: center; justify-content: center; flex-shrink: 0;
+    transition: background-color 0.2s ease;
+  }
+  .nav-toggle:hover { background: rgba(127, 127, 127, 0.12); }
 
   /* ---------- Hero 全宽海报 ---------- */
   .hero {
@@ -459,17 +469,36 @@
 
   /* ---------- 响应式 ---------- */
   @media (max-width: 1080px) {
+    .wrap { padding: 0 40px; }
     .layout { flex-direction: column; }
     .sidebar { width: 100%; flex-direction: row; flex-wrap: wrap; }
     .sidebar .profile, .sidebar .rec, .sidebar .links { flex: 1; min-width: 280px; }
   }
   @media (max-width: 720px) {
     .wrap { padding: 0 20px; }
-    .nav-links { gap: 18px; }
-    .nav-links a:nth-child(n + 4) { display: none; }
+    .nav-inner { padding: 0 16px; }
+    /* 导航转为汉堡下拉，所有链接仍可访问，不再隐藏 */
+    .nav-toggle { display: flex; }
+    .nav-links {
+      display: none; position: absolute; top: 64px; left: 0; right: 0;
+      flex-direction: column; align-items: stretch; gap: 0;
+      background: var(--navbar-bg);
+      -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--navbar-border);
+      box-shadow: var(--navbar-shadow);
+      padding: 6px 16px 14px;
+    }
+    .nav-links.open { display: flex; }
+    .nav-links a {
+      padding: 14px 4px; font-size: 16px;
+      border-bottom: 1px solid var(--hairline);
+    }
+    .nav-links a:last-child { border-bottom: none; }
     .hero { height: 300px; }
-    .hero-title { font-size: 26px; }
+    .hero-title { font-size: 24px; }
     .sidebar { flex-direction: column; }
+    .sidebar .profile, .sidebar .rec, .sidebar .links { min-width: 0; }
+    .profile { padding: 24px; }
     .portfolio-grid { grid-template-columns: 1fr; }
   }
 </style>
@@ -504,6 +533,11 @@
             <path d="M16 16L20 20" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
           </svg>
         </span>
+        <button class="nav-toggle" id="navToggle" aria-label="打开菜单" aria-expanded="false">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </button>
       </div>
     </div>
   </header>
@@ -715,6 +749,28 @@
       onScroll();
       btn.addEventListener('click', function () {
         window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    })();
+
+    /* ===== 移动端汉堡菜单（桌面端按钮隐藏，不影响 PC） ===== */
+    (function () {
+      var toggle = document.getElementById('navToggle');
+      var links = document.querySelector('.nav-links');
+      if (!toggle || !links) return;
+      function close() {
+        links.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+      }
+      toggle.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var open = links.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+      links.addEventListener('click', function (e) {
+        if (e.target.tagName === 'A') close();
+      });
+      document.addEventListener('click', function (e) {
+        if (links.classList.contains('open') && !links.contains(e.target) && e.target !== toggle) close();
       });
     })();
   </script>

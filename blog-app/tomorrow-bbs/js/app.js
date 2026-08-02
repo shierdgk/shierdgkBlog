@@ -127,7 +127,8 @@
      头部：菜单 / 搜索 / 发帖 / 登录注册
      ============================================================ */
   function renderMenu() {
-    var html = '<span class="menu-item ' + (state.currentPBoardId === '-1' ? 'active' : '') + '" data-home="1">首页</span>';
+    var html = '<a class="back-blog-drawer" href="../index.html">← 返回博客</a>' +
+      '<span class="menu-item ' + (state.currentPBoardId === '-1' ? 'active' : '') + '" data-home="1">首页</span>';
     TB.boards.forEach(function (b) {
       var hasChild = b.children && b.children.length > 0;
       var cls = 'menu-item' + (hasChild ? ' has-child' : '') +
@@ -921,14 +922,28 @@
   function bindHeader() {
     $('#logo').addEventListener('click', function () { nav('/'); });
     // 菜单（含悬浮二级板块）
+    function closeMenu() {
+      var m = $('#menu'); if (m) m.classList.remove('open');
+      var s = $('#navScrim'); if (s) s.classList.remove('open');
+    }
     $('#menu').addEventListener('click', function (e) {
       var home = e.target.closest('[data-home]');
-      if (home) { nav('/'); return; }
+      if (home) { nav('/'); closeMenu(); return; }
       var sub = e.target.closest('.sub-board');
-      if (sub) { e.stopPropagation(); nav('/forum/' + sub.dataset.pbid + '/' + sub.dataset.bid); return; }
+      if (sub) { e.stopPropagation(); nav('/forum/' + sub.dataset.pbid + '/' + sub.dataset.bid); closeMenu(); return; }
       var item = e.target.closest('.menu-item');
-      if (item && item.dataset.pbid) { nav('/forum/' + item.dataset.pbid); }
+      if (item && item.dataset.pbid) { nav('/forum/' + item.dataset.pbid); closeMenu(); }
     });
+    // 移动端抽屉
+    var navToggle = $('#navToggle');
+    if (navToggle) navToggle.addEventListener('click', function (e) {
+      e.stopPropagation();
+      $('#menu').classList.toggle('open');
+      $('#navScrim').classList.toggle('open');
+    });
+    var navScrim = $('#navScrim');
+    if (navScrim) navScrim.addEventListener('click', closeMenu);
+    window.addEventListener('hashchange', closeMenu);
     // 搜索
     function doSearch() {
       state.search = $('#searchText').value.trim();

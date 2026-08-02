@@ -117,7 +117,7 @@
   ];
   function renderMenu(active) {
     var menu = $('menu');
-    menu.innerHTML = MENU.map(function (m) {
+    menu.innerHTML = '<a class="back-blog-drawer" href="../index.html">← 返回博客</a>' + MENU.map(function (m) {
       var cls = 'menu-item' + (m.path === active && !m.disabled ? ' active' : '');
       var style = m.disabled ? 'opacity:.4;pointer-events:none;' : '';
       return '<div class="' + cls + '" data-nav="' + m.path + '" style="' + style + '">' +
@@ -804,7 +804,7 @@
     // 侧栏 / 导航
     $('aside').addEventListener('click', function (e) {
       var item = e.target.closest('[data-nav]');
-      if (item) { location.hash = '#' + item.getAttribute('data-nav'); }
+      if (item) { location.hash = '#' + item.getAttribute('data-nav'); closeDrawer(); }
     });
     document.body.addEventListener('click', function (e) {
       var navEl = e.target.closest('[data-nav]');
@@ -816,6 +816,19 @@
       var a = $('aside'); a.classList.toggle('collapsed');
       $('collapseBtn').textContent = a.classList.contains('collapsed') ? '»' : '«';
     });
+
+    // 移动端侧栏抽屉
+    function closeDrawer() {
+      var a = $('aside'); if (a) a.classList.remove('open');
+      var s = $('navScrim'); if (s) s.classList.remove('open');
+    }
+    $('navToggle').addEventListener('click', function (e) {
+      e.stopPropagation();
+      var a = $('aside'); a.classList.toggle('open');
+      var s = $('navScrim');
+      if (a.classList.contains('open')) { if (s) s.classList.add('open'); } else { if (s) s.classList.remove('open'); }
+    });
+    $('navScrim').addEventListener('click', closeDrawer);
 
     // 主题
     $('themeBtn').addEventListener('click', function () { applyTheme(state.theme === 'dark' ? 'light' : 'dark'); });
