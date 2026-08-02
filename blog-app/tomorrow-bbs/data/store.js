@@ -46,7 +46,7 @@
   var users = {
     '1001': {
       userId: '1001', nickName: '十二当归客', color: '#409eff',
-      avatar: 'file/avatar/0781209396.jpg',
+      avatar: 'file/avatar/0781209396.webp',
       personDescription: '全栈 → 自动化测试 → 测试开发。喜欢折腾效率工具与论坛类项目。',
       currentIntegral: 1280, totalIntegral: 2560,
       joinTime: '2023-01-15 17:45:46', lastLoginTime: '2026-08-01 09:20:11',
